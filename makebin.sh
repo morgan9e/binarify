@@ -1,12 +1,12 @@
 #!/bin/bash
 
 if [ $# -lt 2 ]; then
-    echo "Usage: $0 <init> <files...>"
+    echo "Usage: $0 <init> <files...>" >&2
     exit 1
 fi
 
 if [ -t 1 ]; then
-    echo "Error: Refusing writing to terminal."
+    echo "Error: Refusing writing to terminal." >&2
     exit 1
 fi
 
@@ -49,8 +49,7 @@ tar cf "$tmptar" -C "$(dirname $init)" "$(basename $init)"
 for file in "${files[@]}"; do
   tar rf "$tmptar" -C "$(dirname $file)" "$(basename $file)"
 done
-echo "makebin init: $(basename $init), files: (" $(tar tf $tmptar) ")";
-echo;
+echo "makebin init: $(basename $init), files: (" $(tar tf $tmptar) ")" >&2;
 cat "$tmptar" >> "$out"
 rm "$tmptar"
 
@@ -58,6 +57,5 @@ payload_line=$(grep -n '^## DATA ##' -oa ${out} | cut -d: -f1)
 payload_line=$((payload_line + 1))
 
 sed -i "s/PAYLOAD_LINE=__PAYLOAD_LINE__/PAYLOAD_LINE=${payload_line}/" ${out}
-
 
 cat ${out};
