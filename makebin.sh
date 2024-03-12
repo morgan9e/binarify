@@ -5,6 +5,12 @@ if [ $# -lt 2 ]; then
     exit 1
 fi
 
+if [ -t 1 ]; then
+    echo "Error: Refusing writing to terminal."
+    exit 1
+fi
+
+
 out=$(mktemp)
 init="$1"
 shift
@@ -53,5 +59,5 @@ payload_line=$((payload_line + 1))
 
 sed -i "s/PAYLOAD_LINE=__PAYLOAD_LINE__/PAYLOAD_LINE=${payload_line}/" ${out}
 
-cat ${out} > mybinary;
-chmod +x mybinary;
+
+cat ${out};
